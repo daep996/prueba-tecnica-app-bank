@@ -42,4 +42,17 @@ router.get('/:id', async (req: Request, res: Response): Promise<any> => {
     return res.json(account);
 });
 
+router.get('/user/:id', async (req: Request, res: Response): Promise<any> => {
+    const id = Number(req.params.id) ?? 0
+    const user = await userRepo.findOneBy({ id })
+    if (!user) return res.status(404).json({ message: 'Usuario no encontrado' })
+
+    const userAccounts = await accountRepo.find({
+        where: {
+            user: { id }
+        }
+    })
+    return res.json(userAccounts)
+})
+
 export default router;
