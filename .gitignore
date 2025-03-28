@@ -6,3 +6,7 @@ postgres-data/
 
 dist/
 build/
+
+.angular/
+
+.vscode/
