@@ -1,0 +1,47 @@
+<div class="account-detail-container">
+    <mat-card *ngIf="(account$ | async) as account; else loading">
+        <mat-card-header>
+            <mat-icon mat-card-avatar>account_balance</mat-icon>
+            <mat-card-title>{{ account.name }}</mat-card-title>
+            <mat-card-subtitle>{{ getAccountTypeLabel(account.accountType) }}</mat-card-subtitle>
+        </mat-card-header>
+
+        <mat-card-content>
+            <mat-list>
+                <mat-list-item>
+                    <span matListItemTitle>Número de cuenta</span>
+                    <span matListItemLine>{{ account.accountNumber }}</span>
+                </mat-list-item>
+
+                <mat-divider></mat-divider>
+
+                <mat-list-item>
+                    <span matListItemTitle>Tipo de cuenta</span>
+                    <span matListItemLine>{{ getAccountTypeLabel(account.accountType) }}</span>
+                </mat-list-item>
+
+                <mat-divider></mat-divider>
+
+                <mat-list-item>
+                    <span matListItemTitle>Saldo disponible</span>
+                    <span matListItemLine class="account-balance">{{ account.balance | currency:account.currency
+                        }}</span>
+                </mat-list-item>
+            </mat-list>
+        </mat-card-content>
+
+        <mat-card-actions>
+            <button mat-button color="primary" (click)="goBack()">
+                <mat-icon>arrow_back</mat-icon> Volver
+            </button>
+        </mat-card-actions>
+    </mat-card>
+
+    <ng-template #loading>
+        <mat-card>
+            <mat-card-content>
+                <p>Cargando detalles de la cuenta...</p>
+            </mat-card-content>
+        </mat-card>
+    </ng-template>
+</div>

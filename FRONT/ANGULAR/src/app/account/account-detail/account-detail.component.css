@@ -1,0 +1,11 @@
+.account-detail-container {
+    padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.account-balance {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #2e7d32;
+}

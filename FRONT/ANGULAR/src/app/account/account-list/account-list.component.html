@@ -1,0 +1,41 @@
+<div class="account-container">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Mis Cuentas Bancarias</mat-card-title>
+      </mat-card-header>
+      
+      <mat-card-content>
+        <div class="account-actions">
+          <button mat-raised-button color="primary" (click)="openAddAccountDialog()">
+            <mat-icon>add</mat-icon> Agregar Nueva Cuenta
+          </button>
+        </div>
+        
+        <div class="account-list" *ngIf="(accounts$ | async) as accounts">
+          <mat-card *ngFor="let account of accounts" class="account-card">
+            <mat-card-header>
+              <mat-icon mat-card-avatar>account_balance</mat-icon>
+              <mat-card-title>{{ account.name }}</mat-card-title>
+              <mat-card-subtitle>{{ getAccountTypeLabel(account.accountType) }}</mat-card-subtitle>
+            </mat-card-header>
+            
+            <mat-card-content>
+              <p><strong>Número de cuenta:</strong> {{ account.accountNumber }}</p>
+              <p><strong>Saldo:</strong> {{ account.balance | currency:account.currency }}</p>
+            </mat-card-content>
+            
+            <mat-card-actions>
+              <button mat-button color="primary" [routerLink]="['/account', account.id]">
+                Ver Detalles
+              </button>
+            </mat-card-actions>
+          </mat-card>
+          
+          <div *ngIf="accounts.length === 0" class="no-accounts">
+            No tienes cuentas bancarias registradas. Agrega una nueva cuenta.
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  

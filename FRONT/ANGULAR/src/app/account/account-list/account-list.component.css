@@ -1,0 +1,27 @@
+.account-container {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.account-actions {
+    margin-bottom: 20px;
+}
+
+.account-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.account-card {
+    height: 100%;
+}
+
+.no-accounts {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 40px;
+    background-color: #f5f5f5;
+    border-radius: 4px;
+}
