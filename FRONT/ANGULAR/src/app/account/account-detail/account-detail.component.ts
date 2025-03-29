@@ -32,6 +32,7 @@ export class AccountDetailComponent implements OnInit {
     this.account$ = this.route.paramMap.pipe(
       switchMap(params => {
         const id = params.get('id');
+        console.log(`AccountDetailComponent id: ${id} type ${typeof id}`)
         return this.accountService.getAccountById(id || '');
       })
     );

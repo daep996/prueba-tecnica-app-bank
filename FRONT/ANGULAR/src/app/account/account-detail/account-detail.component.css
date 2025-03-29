@@ -9,3 +9,12 @@
     font-weight: bold;
     color: #2e7d32;
 }
+
+.bold-item {
+    font-weight: bold;
+    color: var(--mat-sys-on-primary-container)
+}
+
+.alg-mid {
+    vertical-align: middle;
+}

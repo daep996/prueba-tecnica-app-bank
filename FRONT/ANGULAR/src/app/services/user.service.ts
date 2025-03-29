@@ -9,8 +9,15 @@ interface CustomJwtPayload extends JwtPayload {
   providedIn: 'root'
 })
 export class UserService {
-  private tokenKey = 'authToken';
   private userId = -1;
+
+  constructor() {
+    const token = this.getToken();
+    if (token) {
+      const decoded = jwtDecode<CustomJwtPayload>(token);
+      this.userId = Number(decoded.userId);
+    }
+  }
 
   setToken(token: string) : void {
     const decoded = jwtDecode<CustomJwtPayload>(token);

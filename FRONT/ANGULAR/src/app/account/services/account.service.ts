@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, firstValueFrom, Observable, of } from 'rxjs';
+import { BehaviorSubject, catchError, firstValueFrom, Observable, of, throwError } from 'rxjs';
 import { Account } from '../models/account.model';
 import { UserService } from '../../services/user.service';
 import { HttpClient } from '@angular/common/http';
@@ -27,6 +27,7 @@ export class AccountService {
       name: 'Cuenta Corriente'
     }
   ];
+  private accountUrl = 'http://localhost:3000/accounts'
 
   private accountsSubject = new BehaviorSubject<Account[]>(this.mockAccounts);
 
@@ -34,19 +35,32 @@ export class AccountService {
 
   getAccounts(): Observable<Account[]> {
     return this.fetchAccountsByUser();
-    //TODO
-    return this.accountsSubject.asObservable();
   }
 
   private fetchAccountsByUser() : Observable<Account[]> {
     const id = this.userService.getUserId()
     const headers = { 'Authorization': `Bearer ${this.userService.getToken()}` };
-    return this.http.get<Account[]>(`http://localhost:3000/accounts/user/${id}`, { headers });
+    return this.http.get<Account[]>(`${this.accountUrl}/user/${id}`, { headers }).pipe(
+      catchError((_) => {return []})
+    );
   }
 
-  getAccountById(id: string): Observable<Account | undefined> {
-    const account = this.mockAccounts.find(acc => acc.id === id);
-    return of(account)
+  getAccountById(id: string): Observable<Account> {
+    try {
+      const res = this.fetchDetailAccounts(id);
+      return res;
+    } catch (error) {
+      return throwError(() => new Error('Failed to fetch account by ID.'));
+    }
+  }
+
+  private fetchDetailAccounts(accountId: string): Observable<Account> {
+    const headers = { 'Authorization': `Bearer ${this.userService.getToken()}` };
+    return this.http.get<Account>(`${this.accountUrl}/${accountId}`, { headers }).pipe(
+      catchError((_) => {
+        return throwError(() => new Error('Failed to fetch account details.'));
+      })
+    );
   }
 
   addAccount(account: Omit<Account, 'id'>): Observable<Account> {

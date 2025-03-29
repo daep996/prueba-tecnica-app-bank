@@ -9,8 +9,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCard, MatCardActions, MatCardContent, MatCardHeader, MatCardSubtitle, MatCardTitle } from '@angular/material/card';
 import { MatIcon } from '@angular/material/icon';
-import { RouterLink } from '@angular/router';
-import { FormGroup } from '@angular/forms';
+import { Router, RouterLink } from '@angular/router';
 import { UserService } from '../../services/user.service';
 
 @Component({
@@ -40,12 +39,16 @@ export class AccountListComponent implements OnInit {
   constructor(
     private accountService: AccountService,
     private dialog: MatDialog,
-    private userService: UserService
+    private userService: UserService,
+    private router: Router
   ) {
     this.accounts$ = this.accountService.getAccounts();
   }
 
   ngOnInit(): void {
+    if (!this.userService.isLoggedIn()) {
+      this.router.navigate(['/login'])
+    }
   }
 
   openAddAccountDialog(): void {
