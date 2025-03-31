@@ -18,7 +18,7 @@ router.get('/', async (req: Request, res: Response): Promise<any> => {
 
 // Crear cuenta
 router.post('/', async (req: Request, res: Response): Promise<any> => {
-    const { type } = req.body;
+    const { type, balance } = req.body as { type: string; balance: number };
     const user = await userRepo.findOneBy({ id: req.body.userId });
     if (!user) return res.status(404).json({ message: 'Usuario no encontrado' });
 
@@ -26,7 +26,7 @@ router.post('/', async (req: Request, res: Response): Promise<any> => {
         accountNumber: Math.random().toString().slice(2, 12),
         type,
         user,
-        balance: 0,
+        balance: isNaN(balance) ? 0 : balance,
     });
 
     await accountRepo.save(account);
