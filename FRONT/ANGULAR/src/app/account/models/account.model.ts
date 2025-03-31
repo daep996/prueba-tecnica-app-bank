@@ -1,7 +1,7 @@
 export interface Account {
     id: string;
     accountNumber: string;
-    accountType: 'savings' | 'checking';
+    type: 'ahorro' | 'corriente';
     balance: number;
     currency: string;
     name: string;

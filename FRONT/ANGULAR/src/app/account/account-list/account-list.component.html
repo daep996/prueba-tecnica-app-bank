@@ -1,7 +1,10 @@
 <div class="account-container">
     <mat-card>
       <mat-card-header style="padding: 20px;">
-        <mat-card-title>Mis Cuentas Bancarias</mat-card-title>
+        <mat-card-title>
+          <mat-icon mat-card-avatar>assured_workload</mat-icon>
+          Mis Cuentas Bancarias
+        </mat-card-title>
       </mat-card-header>
       
       <mat-card-content>
@@ -13,18 +16,17 @@
         
         <div class="account-list" *ngIf="(accounts$ | async) as accounts">
           <mat-card *ngFor="let account of accounts" class="account-card">
-            <mat-card-header>
+            <mat-card-header style="align-items: center;">
               <mat-icon mat-card-avatar>account_balance</mat-icon>
-              <mat-card-title>{{ account.name }}</mat-card-title>
-              <mat-card-subtitle>{{ getAccountTypeLabel(account.accountType) }}</mat-card-subtitle>
+              <mat-card-title style="padding-inline-start: 0.3em;">{{ account.type | titlecase}}</mat-card-title>
             </mat-card-header>
             
             <mat-card-content>
               <p><strong>Número de cuenta:</strong> {{ account.accountNumber }}</p>
-              <p><strong>Saldo:</strong> {{ account.balance | currency:account.currency }}</p>
+              <p><strong>Saldo:</strong> $ {{ account.balance }}</p>
             </mat-card-content>
             
-            <mat-card-actions>
+            <mat-card-actions style="padding-top: 1rem;">
               <button mat-button color="primary" [routerLink]="['/account', account.id]">
                 Ver Detalles
               </button>

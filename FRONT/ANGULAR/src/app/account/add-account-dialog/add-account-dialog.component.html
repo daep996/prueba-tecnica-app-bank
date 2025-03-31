@@ -1,69 +1,43 @@
 <div class="account-dialog-container">
   <h2 mat-dialog-title>Agregar Nueva Cuenta</h2>
 
-  <form [formGroup]="accountForm" (ngSubmit)="onSubmit()">
-    <mat-form-field style="width: 100%;">
+  <form [formGroup]="accountForm" (ngSubmit)="onSubmit()" style="width: 100%;">
       <mat-dialog-content>
         <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Nombre de la cuenta</mat-label>
-          <input matInput formControlName="name" placeholder="Ej. Cuenta de Ahorros Principal">
-          <mat-error *ngIf="accountForm.get('name')?.hasError('required')">
-            El nombre de la cuenta es requerido
-          </mat-error>
-        </mat-form-field>
-
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Número de cuenta</mat-label>
-          <input matInput formControlName="accountNumber" placeholder="1234-5678-9012-3456">
-          <mat-hint>Formato: XXXX-XXXX-XXXX-XXXX</mat-hint>
-          <mat-error *ngIf="accountForm.get('accountNumber')?.hasError('required')">
-            El número de cuenta es requerido
-          </mat-error>
-          <mat-error *ngIf="accountForm.get('accountNumber')?.hasError('pattern')">
-            El formato debe ser XXXX-XXXX-XXXX-XXXX
-          </mat-error>
-        </mat-form-field>
-
-        <mat-form-field appearance="outline" class="full-width">
           <mat-label>Tipo de cuenta</mat-label>
-          <mat-select formControlName="accountType">
-            <mat-option value="savings">Cuenta de Ahorros</mat-option>
-            <mat-option value="checking">Cuenta Corriente</mat-option>
+          <mat-select formControlName="accountType" disableRipple>
+            <mat-option>Seleccione un tipo</mat-option>
+            <mat-option value="ahorros">Cuenta de Ahorros</mat-option>
+            <mat-option value="corriente">Cuenta Corriente</mat-option>
           </mat-select>
-          <mat-error *ngIf="accountForm.get('accountType')?.hasError('required')">
-            El tipo de cuenta es requerido
-          </mat-error>
+          @if (accountForm.get('accountType')?.hasError('required')) {
+            <mat-error>
+              El tipo de cuenta es requerido
+            </mat-error>
+          }
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Saldo inicial</mat-label>
           <input matInput type="number" formControlName="balance">
-          <mat-error *ngIf="accountForm.get('balance')?.hasError('required')">
-            El saldo inicial es requerido
-          </mat-error>
-          <mat-error *ngIf="accountForm.get('balance')?.hasError('min')">
-            El saldo no puede ser negativo
-          </mat-error>
-        </mat-form-field>
-
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Moneda</mat-label>
-          <mat-select formControlName="currency">
-            <mat-option value="USD">USD</mat-option>
-            <mat-option value="EUR">EUR</mat-option>
-            <mat-option value="COP">COP</mat-option>
-          </mat-select>
-          <mat-error *ngIf="accountForm.get('currency')?.hasError('required')">
-            La moneda es requerida
-          </mat-error>
+          <mat-hint>Ingrese un número, valor en COP</mat-hint>
+          @if (accountForm.get('balance')?.hasError('required')) {
+            <mat-error>
+              El saldo inicial es requerido
+            </mat-error>
+          }
+          @if (accountForm.get('balance')?.hasError('min')) {
+            <mat-error>
+              El saldo no puede ser negativo
+            </mat-error>
+          }
         </mat-form-field>
       </mat-dialog-content>
-    </mat-form-field>
-
 
     <mat-dialog-actions align="end">
-      <button mat-button type="button" (click)="onCancel()">Cancelar</button>
-      <button mat-raised-button color="primary" type="submit" [disabled]="accountForm.invalid">Agregar</button>
+      <button mat-raised-button type="button" (click)="onCancel()">Cancelar</button>
+      <button mat-flat-button color="primary" type="submit" [disabled]="accountForm.invalid">Agregar</button>
     </mat-dialog-actions>
+
   </form>
 </div>

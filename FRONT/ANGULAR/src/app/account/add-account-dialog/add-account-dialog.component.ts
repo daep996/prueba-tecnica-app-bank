@@ -1,8 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { MatDialog, MatDialogActions, MatDialogContent, MatDialogRef } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatDialogActions, MatDialogContent, MatDialogRef } from '@angular/material/dialog';
 import { MatError, MatFormField, MatHint, MatLabel } from '@angular/material/form-field';
 import { MatOption, MatSelect } from '@angular/material/select';
+import { MatInputModule } from '@angular/material/input';
+import { MatButton } from '@angular/material/button';
+import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+
+import { DialogContentComponent } from '../dialog-content/dialog-content.component';
+import { AccountService } from '../services/account.service';
 
 @Component({
   selector: 'app-add-account-dialog',
@@ -17,35 +23,46 @@ import { MatOption, MatSelect } from '@angular/material/select';
     MatOption,
     MatDialogActions,
     MatDialogContent,
-    MatHint
+    MatInputModule,
+    CommonModule,
+    MatHint,
+    MatButton
   ]
 })
-export class AddAccountDialogComponent implements OnInit {
-  accountForm: FormGroup;
+export class AddAccountDialogComponent {
+  accountForm: FormGroup
 
   constructor(
     private fb: FormBuilder,
-    private dialogRef: MatDialogRef<AddAccountDialogComponent>
+    private accountService: AccountService,
+    private dialogRef: MatDialogRef<AddAccountDialogComponent>,
+    private dialog: MatDialog,
   ) {
     this.accountForm = this.fb.group({
-      name: ['', [Validators.required]],
-      accountNumber: ['', [Validators.required, Validators.pattern(/^\d{4}-\d{4}-\d{4}-\d{4}$/)]],
       accountType: ['savings', [Validators.required]],
       balance: [0, [Validators.required, Validators.min(0)]],
-      currency: ['USD', [Validators.required]]
     });
-  }
-
-  ngOnInit(): void {
   }
 
   onSubmit(): void {
     if (this.accountForm.valid) {
-      this.dialogRef.close(this.accountForm.value);
+      const {accountType, balance} = this.accountForm.value
+      this.accountService.addAccount(accountType, balance).subscribe(async (account) => {
+        const { accountNumber } = account
+        this.onSuccessModal(accountNumber)
+      })
+      this.dialogRef.close()
     }
   }
 
   onCancel(): void {
-    this.dialogRef.close();
+    this.dialogRef.close()
   }
+
+  onSuccessModal(accountNumber: string): void {
+    this.dialog.open(DialogContentComponent, {
+      data: { accountNumber }
+    });
+  }
+
 }

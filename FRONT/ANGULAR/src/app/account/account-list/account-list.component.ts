@@ -7,7 +7,7 @@ import { AddAccountDialogComponent } from '../add-account-dialog/add-account-dia
 import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
-import { MatCard, MatCardActions, MatCardContent, MatCardHeader, MatCardSubtitle, MatCardTitle } from '@angular/material/card';
+import { MatCard, MatCardActions, MatCardContent, MatCardHeader, MatCardTitle } from '@angular/material/card';
 import { MatIcon } from '@angular/material/icon';
 import { Router, RouterLink } from '@angular/router';
 import { UserService } from '../../services/user.service';
@@ -28,7 +28,6 @@ import { UserService } from '../../services/user.service';
     MatCardTitle,
     MatCardTitle,
     MatCardContent,
-    MatCardSubtitle,
     MatCardActions
   ]
 })
@@ -58,13 +57,9 @@ export class AccountListComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        // The dialog returns the new account data
-        this.accountService.addAccount(result);
+        // this.accountService.addAccount(result);
       }
     });
   }
 
-  getAccountTypeLabel(type: 'savings' | 'checking'): string {
-    return type === 'savings' ? 'Ahorros' : 'Corriente';
-  }
 }

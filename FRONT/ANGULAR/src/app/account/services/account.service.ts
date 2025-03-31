@@ -2,77 +2,64 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, catchError, firstValueFrom, Observable, of, throwError } from 'rxjs';
 import { Account } from '../models/account.model';
 import { UserService } from '../../services/user.service';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AccountService {
-  // Mock data - in a real app, this would come from an API
-  private mockAccounts: Account[] = [
-    {
-      id: '1',
-      accountNumber: '1234-5678-9012-3456',
-      accountType: 'savings',
-      balance: 5000,
-      currency: 'USD',
-      name: 'Cuenta de Ahorros Principal'
-    },
-    {
-      id: '2',
-      accountNumber: '9876-5432-1098-7654',
-      accountType: 'checking',
-      balance: 2500,
-      currency: 'USD',
-      name: 'Cuenta Corriente'
-    }
-  ];
   private accountUrl = 'http://localhost:3000/accounts'
+  private headers: HttpHeaders;
 
-  private accountsSubject = new BehaviorSubject<Account[]>(this.mockAccounts);
-
-  constructor(private userService: UserService, private http: HttpClient) { }
+  constructor(private userService: UserService, private http: HttpClient) {
+    this.headers = new HttpHeaders({ 'Authorization': `Bearer ${this.userService.getToken()}` })
+  }
 
   getAccounts(): Observable<Account[]> {
-    return this.fetchAccountsByUser();
+    return this.fetchAccountsByUser()
   }
 
   private fetchAccountsByUser() : Observable<Account[]> {
     const id = this.userService.getUserId()
-    const headers = { 'Authorization': `Bearer ${this.userService.getToken()}` };
-    return this.http.get<Account[]>(`${this.accountUrl}/user/${id}`, { headers }).pipe(
+    return this.http.get<Account[]>(`${this.accountUrl}/user/${id}`, { headers: this.headers }).pipe(
       catchError((_) => {return []})
     );
   }
 
   getAccountById(id: string): Observable<Account> {
     try {
-      const res = this.fetchDetailAccounts(id);
+      const res = this.fetchDetailAccounts(id)
       return res;
     } catch (error) {
-      return throwError(() => new Error('Failed to fetch account by ID.'));
+      return throwError(() => new Error('Failed to fetch account by ID.'))
     }
   }
 
   private fetchDetailAccounts(accountId: string): Observable<Account> {
-    const headers = { 'Authorization': `Bearer ${this.userService.getToken()}` };
-    return this.http.get<Account>(`${this.accountUrl}/${accountId}`, { headers }).pipe(
-      catchError((_) => {
-        return throwError(() => new Error('Failed to fetch account details.'));
+    return this.http.get<Account>(`${this.accountUrl}/${accountId}`, { headers: this.headers }).pipe(
+      catchError(() => {
+        return throwError(() => new Error('Failed to fetch account details.'))
       })
     );
   }
 
-  addAccount(account: Omit<Account, 'id'>): Observable<Account> {
-    // Generate a random ID (in a real app, the backend would do this)
-    const newAccount: Account = {
-      ...account,
-      id: Date.now().toString()
-    };
-    
-    this.mockAccounts.push(newAccount);
-    this.accountsSubject.next([...this.mockAccounts]);
-    
-    return of(newAccount);
+  addAccount(accountType: string, balance: string): Observable<Account> {
+    try {
+      const res = this.fetchCreateAccont(accountType, balance)
+      return res
+    } catch (error) {
+      return throwError(() => new Error('Failed in create account.'))
+    }
+  }
+
+  private fetchCreateAccont(accountType: string, balance: string): Observable<Account> {
+    return this.http.post<Account>(
+      `${this.accountUrl}`,
+      { balance, type: accountType, userId: this.userService.getUserId() },
+      { headers: this.headers }).pipe(
+      catchError(() => {
+        return throwError(() => new Error('Create account failed.'))
+      })
+    )
   }
 }
