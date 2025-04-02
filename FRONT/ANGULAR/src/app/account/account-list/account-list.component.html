@@ -9,8 +9,11 @@
       
       <mat-card-content>
         <div class="account-actions">
-          <button mat-raised-button color="primary" (click)="openAddAccountDialog()">
+          <button mat-flat-button color="primary" (click)="openAddAccountDialog()">
             <mat-icon>add</mat-icon> Agregar Nueva Cuenta
+          </button>
+          <button mat-stroked-button color="primary" (click)="openTransferComponent()">
+            <mat-icon>payments</mat-icon> Transferir dinero
           </button>
         </div>
         

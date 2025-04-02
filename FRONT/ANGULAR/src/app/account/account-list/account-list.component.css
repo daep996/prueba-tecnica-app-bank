@@ -7,6 +7,9 @@
 .account-actions {
     margin-bottom: 20px;
 }
+.account-actions button {
+    margin-inline-end: 1rem;
+}
 
 .account-list {
     display: grid;
@@ -16,6 +19,7 @@
 
 .account-card {
     height: 100%;
+    background-color: var(--mat-sys-outline-variant);
 }
 
 .no-accounts {

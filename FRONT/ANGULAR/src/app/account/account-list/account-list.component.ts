@@ -62,4 +62,8 @@ export class AccountListComponent implements OnInit {
     });
   }
 
+  openTransferComponent() :void {
+    this.router.navigate(['/transaction/new'])
+  }
+
 }
