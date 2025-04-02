@@ -39,7 +39,7 @@ router.post('/', async (req: Request, res: Response): Promise<any> => {
     if (parsedAmount <= 0) return res.status(400).json({ message: 'El monto debe ser positivo' })
 
     const origin = await accountRepo.findOne({
-        where: { id: accountOriginId, user: { id: req.body.userId } },
+        where: { accountNumber: accountOriginId, user: { id: req.body.userId } },
     });
 
     const destination = await accountRepo.findOneBy({ id: accountDestinationId })
