@@ -2,7 +2,12 @@
     padding: 20px;
     max-width: 800px;
     margin: 0 auto;
+
+    & .tx-account {
+        margin-block: 2rem;
+    }
 }
+
 
 .account-balance {
     font-size: 1em;

@@ -41,5 +41,23 @@ export class TransactionService {
       )
     }
 
+    getTransacionByAccount(id: number) {
+      try {
+        const resp = this.fetchTransactionByAccount(id)
+        return resp
+      } catch (error) {
+        return throwError(() => new Error('Failed get transactions account.'))
+      }
+    }
+
+    private fetchTransactionByAccount(id: number): Observable<any> {
+      return this.http.get(`${this.transactionUrl}/account/${id}`, {headers: this.headers})
+        .pipe(
+          catchError(() => {
+            return throwError(() => new Error('Failed get transactions account.'))
+          })
+        )
+    }
+
 }
 
