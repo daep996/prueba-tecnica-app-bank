@@ -1,14 +1,15 @@
-import { Component } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Observable, switchMap } from 'rxjs';
-import { Account } from '../models/account.model';
-import { AccountService } from '../services/account.service';
-import { MatCardModule } from '@angular/material/card';
-import { CommonModule } from '@angular/common';
-import { MatButtonModule } from '@angular/material/button';
 import { MatDivider, MatList, MatListItem } from '@angular/material/list';
+import { catchError, Observable, switchMap, throwError } from 'rxjs';
+import { MatButtonModule } from '@angular/material/button';
+import { ActivatedRoute, Router } from '@angular/router';
+import { MatCardModule } from '@angular/material/card';
 import { MatIcon } from '@angular/material/icon';
+import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+
 import { TransactionsAccountComponent } from '../../transaction/transactions-account/transactions-account.component';
+import { AccountService } from '../services/account.service';
+import { Account } from '../models/account.model';
 
 @Component({
   selector: 'app-account-detail',
@@ -40,6 +41,11 @@ export class AccountDetailComponent {
         const id = params.get('id')
         this.idAccount = params.get('id') ?? ''
         return this.accountService.getAccountById(id || '')
+      })
+    ).pipe(
+      catchError(() => {
+        this.router.navigate(['/login'])
+        return throwError(() => new Error('Error fetching account detail of user.'))
       })
     )
   }
