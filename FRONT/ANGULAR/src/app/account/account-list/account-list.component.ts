@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { Account } from '../models/account.model';
 import { AccountService } from '../services/account.service';
 import { AddAccountDialogComponent } from '../add-account-dialog/add-account-dialog.component';
@@ -55,10 +55,8 @@ export class AccountListComponent implements OnInit {
       width: '400px'
     });
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        // this.accountService.addAccount(result);
-      }
+    dialogRef.afterClosed().subscribe(_ => {
+      this.accountService.getAccounts().subscribe((accounts) => this.accounts$ = of(accounts))
     });
   }
 
