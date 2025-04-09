@@ -26,7 +26,7 @@ describe('authMiddleware', () => {
     });
 
     it('should allow with valid token', async () => {
-        const token = JwtService.sign({ userId: 1 });
+        const token = JwtService.sign({ userId: '1' });
         const res = await request(app)
             .get('/protected')
             .set('Authorization', `Bearer ${token}`);

@@ -5,7 +5,7 @@ import { Transaction } from './Transaction';
 @Entity()
 export class Account {
     @PrimaryGeneratedColumn()
-    id: number;
+    id: string;
 
     @Column({ unique: true })
     accountNumber: string;

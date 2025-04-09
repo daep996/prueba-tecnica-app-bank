@@ -4,7 +4,7 @@ import ms from "../../node_modules/@types/ms"
 import { config } from '../config/config';
 
 interface JWTPayload {
-    userId: number;
+    userId: string;
 }
 
 export class JwtService {

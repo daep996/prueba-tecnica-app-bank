@@ -12,18 +12,18 @@ router.use(authMiddleware);
 
 // Listar transacciones
 router.get('/', async (req: Request, res: Response) : Promise<any> => {
-    const { accountId, type } = req.query;
-    const filters: any = {};
+    const { accountId, type } = req.query
+    const filters: any = {}
 
-    if (accountId) filters.accountOrigin = { id: parseInt(accountId as string) };
-    if (type) filters.type = type;
+    if (accountId) filters.accountOrigin = { id: parseInt(accountId as string) }
+    if (type) filters.type = type
 
     const transactions = await txRepo.find({
         where: filters,
         relations: ['accountOrigin', 'accountDestination'],
-    });
+    })
 
-    return res.json(transactions);
+    return res.json(transactions)
 });
 
 // Crear transferencia
@@ -42,7 +42,7 @@ router.post('/', async (req: Request, res: Response): Promise<any> => {
         where: { accountNumber: accountOriginId, user: { id: req.body.userId } },
     });
 
-    const destination = await accountRepo.findOneBy({ id: accountDestinationId })
+    const destination = await accountRepo.findOneBy({ accountNumber: accountDestinationId })
 
     if (!origin || !destination) return res.status(404).json({ message: 'Cuenta no encontrada' })
     if (origin.balance < parsedAmount) return res.status(400).json({ message: 'Saldo insuficiente' })
@@ -70,30 +70,30 @@ router.get('/:id', async (req: Request, res: Response): Promise<any> => {
     const tx = await txRepo.findOne({
         where: { id: parseInt(req.params.id) },
         relations: ['accountOrigin', 'accountDestination'],
-    });
-    if (!tx) return res.status(404).json({ message: 'Transacción no encontrada' });
-    return res.json(tx);
+    })
+    if (!tx) return res.status(404).json({ message: 'Transacción no encontrada' })
+    return res.json(tx)
 });
 
 // Detalle de transacciones usuario
 router.get('/user/:id', async (req: Request, res: Response): Promise<any> => {
     const tx = await txRepo.find({
         select: {id: true, amount: true, concept: true, 'type': true, 'created_at': true},
-        where: { user: { id: parseInt(req.params.id) } },
-    });
+        where: { user: { id: req.params.id } },
+    })
     console.log(`tx: ${JSON.stringify(tx)}`)
-    if (!tx) return res.status(404).json({ message: 'Transacción no encontrada' });
-    return res.json(tx);
+    if (!tx) return res.status(404).json({ message: 'Transacción no encontrada' })
+    return res.json(tx)
 });
 
 // Detalle de transacciones mi cuenta
 router.get('/account/:id', async (req: Request, res: Response): Promise<any> => {
     const tx = await txRepo.find({
         select: {id: true, amount: true, concept: true, 'type': true, 'created_at': true},
-        where: { accountOrigin: { id: parseInt(req.params.id) } },
-    });
-    if (!tx) return res.status(404).json({ message: 'Transacción no encontrada' });
-    return res.json(tx);
+        where: { accountOrigin: { id: req.params.id } },
+    })
+    if (!tx) return res.status(404).json({ message: 'Transacción no encontrada' })
+    return res.json(tx)
 });
 
 export default router;

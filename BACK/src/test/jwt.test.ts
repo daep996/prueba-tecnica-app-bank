@@ -2,7 +2,7 @@ import { JwtService } from '../utils/jwt';
 
 describe('JwtService test', () => {
 
-    const payload = { userId: 1 };
+    const payload = { userId: '1' };
 
     it('should generate a valid JWT', () => {
         const token = JwtService.sign(payload);

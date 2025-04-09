@@ -36,14 +36,14 @@ router.post('/', async (req: Request, res: Response): Promise<any> => {
 // Ver detalle de una cuenta
 router.get('/:id', async (req: Request, res: Response): Promise<any> => {
     const account = await accountRepo.findOne({
-        where: { id: parseInt(req.params.id), user: { id: req.body.userId } },
+        where: { id: req.params.id, user: { id: req.body.userId } },
     });
     if (!account) return res.status(404).json({ message: 'Cuenta no encontrada' });
     return res.json(account);
 });
 
 router.get('/user/:id', async (req: Request, res: Response): Promise<any> => {
-    const id = Number(req.params.id) ?? 0
+    const id = req.params.id ??  ''
     const user = await userRepo.findOneBy({ id })
     if (!user) return res.status(404).json({ message: 'Usuario no encontrado' })
 
