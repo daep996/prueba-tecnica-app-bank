@@ -19,7 +19,7 @@
 
 .account-card {
     height: 100%;
-    background-color: var(--mat-sys-outline-variant);
+    background-color: var(--mat-sys-surface-variant);
 }
 
 .no-accounts {

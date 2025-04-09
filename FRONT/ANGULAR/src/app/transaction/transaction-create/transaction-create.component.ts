@@ -8,16 +8,18 @@ import {
   Validators,
 } from '@angular/forms';
 import { MatButton } from '@angular/material/button';
-import { MatCard, MatCardContent, MatCardHeader, MatCardTitle } from '@angular/material/card';
+import { MatCard, MatCardActions, MatCardContent, MatCardHeader, MatCardTitle } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatOption, MatSelectModule } from '@angular/material/select';
-import {MatStep, MatStepperModule} from '@angular/material/stepper';
-import { AccountService } from '../../account/services/account.service';
-import { TransactionService } from '../transaction.service';
 import { MatDialog } from '@angular/material/dialog';
-import { DialogTransactionContentComponent } from '../dialog-component/dialog-transaction-component.component';
 import { Router } from '@angular/router';
+import { MatIcon } from '@angular/material/icon';
+
+import { DialogTransactionContentComponent } from '../dialog-component/dialog-transaction-component.component';
+import { AccountService } from '../../account/services/account.service';
+import {MatStep, MatStepperModule} from '@angular/material/stepper';
+import { TransactionService } from '../transaction.service';
 
 interface AccountInfo {
   id: number;
@@ -42,6 +44,8 @@ interface AccountInfo {
     MatStep,
     MatOption,
     MatButton,
+    MatCardActions,
+    MatIcon,
     CommonModule
   ],
   templateUrl: './transaction-create.component.html',
@@ -78,7 +82,7 @@ export class TransactionCreateComponent {
     })
     
     this.destinationFormGroup = this.fb.group({
-      destinationAccount: ['4', [Validators.required, Validators.pattern('^[0-9]+$')]],
+      destinationAccount: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
       amount: [1, [Validators.required, Validators.min(1)]],
       concept: ['Transferencia entre cuentas', [Validators.required]]
     })
@@ -112,6 +116,10 @@ export class TransactionCreateComponent {
         this.router.navigate(['/account'])
       })
     })
+  }
+
+  goBack(): void {
+    this.router.navigate(['/account'])
   }
 
 }

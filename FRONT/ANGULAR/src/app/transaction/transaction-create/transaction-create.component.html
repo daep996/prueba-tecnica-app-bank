@@ -1,109 +1,117 @@
 <div class="container">
-    <mat-card>
-      <mat-card-header>
-        <mat-card-title class="card-title">Transferencia Bancaria</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        <mat-vertical-stepper linear #stepper>
-          <!-- Paso 1: Seleccionar cuenta de origen -->
-          <mat-step [stepControl]="sourceFormGroup" class="step-style">
-            <form [formGroup]="sourceFormGroup">
-              <ng-template matStepLabel>Seleccione cuenta de origen</ng-template>
-              <mat-form-field appearance="fill" style="width: 100%;">
-                <mat-label>Cuenta de origen</mat-label>
-                <mat-select formControlName="sourceAccount" disableRipple>
-                    @for (account of accounts; track account) {
-                    <mat-option [value]="account">
-                        {{ account.accountNumber }} (Saldo: ${{ account.balance }})
-                    </mat-option>
-                    }
-                </mat-select>
-                @if (sourceFormGroup.get('sourceAccount')?.hasError('required')) {
-                <mat-error>
-                    Cuenta de Origen es obligatoria.
-                </mat-error>
+  <mat-card-actions>
+    <button mat-flat-button color="primary" (click)="goBack()">
+      <mat-icon class="alg-mid">arrow_back</mat-icon> Volver
+    </button>
+  </mat-card-actions>
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title class="card-title">Transferencia Bancaria</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <mat-vertical-stepper linear #stepper>
+        <!-- Paso 1: Seleccionar cuenta de origen -->
+        <mat-step [stepControl]="sourceFormGroup" class="step-style">
+          <form [formGroup]="sourceFormGroup">
+            <ng-template matStepLabel>Seleccione cuenta de origen</ng-template>
+            <mat-form-field appearance="fill" style="width: 100%;">
+              <mat-label>Cuenta de origen</mat-label>
+              <mat-select formControlName="sourceAccount" disableRipple>
+                @for (account of accounts; track account) {
+                <mat-option [value]="account">
+                  {{ account.accountNumber }} (Saldo: ${{ account.balance }})
+                </mat-option>
                 }
-              </mat-form-field>
-              <div>
-                <button mat-raised-button matStepperNext [disabled]="sourceFormGroup.invalid">Siguiente</button>
-              </div>
-            </form>
-          </mat-step>
-          <!-- Paso 2: Ingresar cuenta de destino -->
-          <mat-step [stepControl]="destinationFormGroup">
-            <form [formGroup]="destinationFormGroup">
-              <ng-template matStepLabel>Ingrese cuenta de destino</ng-template>
-              <mat-form-field appearance="fill" style="width: 100%">
-                <mat-label>Número de cuenta de destino</mat-label>
-                <input matInput formControlName="destinationAccount" placeholder="Ingrese el número de cuenta" required>
-                @if (destinationFormGroup.controls['destinationAccount'].hasError('required')) {
-                <mat-error>
-                El número de cuenta es obligatorio.
-                </mat-error>
-                }
-                @if (destinationFormGroup.controls['destinationAccount'].hasError('pattern')) {
-                <mat-error>
-                    El número de cuenta debe contener solo dígitos.
-                </mat-error>
-                }
-              </mat-form-field>
-              
-              <mat-form-field appearance="fill" style="width: 100%">
-                <mat-label>Monto a transferir</mat-label>
-                <input matInput formControlName="amount" type="number" placeholder="Ingrese el monto" required>
-                @if (destinationFormGroup.controls['amount'].hasError('required')) {
-                    <mat-error>
-                      El monto es obligatorio.
-                    </mat-error>
-                }
-                @if (destinationFormGroup.controls['amount'].hasError('min')) {
-                    <mat-error>
-                        El monto debe ser mayor a 0.
-                    </mat-error>
-                }
-                @if (destinationFormGroup.controls['amount'].hasError('max')) {
-                    <mat-error>
-                        El monto excede el saldo disponible.
-                    </mat-error>
-                }
-              </mat-form-field>
-
-              <mat-form-field appearance="fill" style="width: 100%">
-                <mat-label>Concepto</mat-label>
-                <textarea matInput formControlName="concept" type="text" placeholder="Ingrese el concepto" required></textarea>
-                @if (destinationFormGroup.controls['concept'].hasError('required')) {
-                    <mat-error>
-                      El concepto es obligatorio.
-                    </mat-error>
-                }
-              </mat-form-field>
-              
-              <div>
-                <button mat-button matStepperPrevious>Atrás</button>
-                <button mat-raised-button matStepperNext [disabled]="destinationFormGroup.invalid">Siguiente</button>
-              </div>
-            </form>
-          </mat-step>
-          <!-- Paso 3: Confirmar y ejecutar la transferencia -->
-          <mat-step>
-            <ng-template matStepLabel>Confirmar transferencia</ng-template>
-            @if (sourceFormGroup.valid && destinationFormGroup.valid) {
+              </mat-select>
+              @if (sourceFormGroup.get('sourceAccount')?.hasError('required')) {
+              <mat-error>
+                Cuenta de Origen es obligatoria.
+              </mat-error>
+              }
+            </mat-form-field>
             <div>
-              <h3>Resumen de la transferencia:</h3>
-              <p><strong>Cuenta de origen:</strong> {{ sourceFormGroup.value.sourceAccount?.accountNumber }}</p>
-              <p><strong>Cuenta de destino:</strong> {{ destinationFormGroup.value.destinationAccount }}</p>
-              <p><strong>Monto a transferir:</strong> ${{ destinationFormGroup.value.amount }}</p>
-              <p><strong>Concepto:</strong> {{ destinationFormGroup.value.concept }}</p>
+              <button mat-raised-button matStepperNext [disabled]="sourceFormGroup.invalid">Siguiente</button>
             </div>
-            }
+          </form>
+        </mat-step>
+        <!-- Paso 2: Ingresar cuenta de destino -->
+        <mat-step [stepControl]="destinationFormGroup">
+          <form [formGroup]="destinationFormGroup">
+            <ng-template matStepLabel>Ingrese cuenta de destino</ng-template>
+            <mat-form-field appearance="fill" style="width: 100%">
+              <mat-label>Número de cuenta de destino</mat-label>
+              <input matInput formControlName="destinationAccount" placeholder="Ingrese el número de cuenta" required>
+              @if (destinationFormGroup.controls['destinationAccount'].hasError('required')) {
+              <mat-error>
+                El número de cuenta es obligatorio.
+              </mat-error>
+              }
+              @if (destinationFormGroup.controls['destinationAccount'].hasError('pattern')) {
+              <mat-error>
+                El número de cuenta debe contener solo dígitos.
+              </mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" style="width: 100%">
+              <mat-label>Monto a transferir</mat-label>
+              <input matInput formControlName="amount" type="number" placeholder="Ingrese el monto" required>
+              @if (destinationFormGroup.controls['amount'].hasError('required')) {
+              <mat-error>
+                El monto es obligatorio.
+              </mat-error>
+              }
+              @if (destinationFormGroup.controls['amount'].hasError('min')) {
+              <mat-error>
+                El monto debe ser mayor a 0.
+              </mat-error>
+              }
+              @if (destinationFormGroup.controls['amount'].hasError('max')) {
+              <mat-error>
+                El monto excede el saldo disponible.
+              </mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" style="width: 100%">
+              <mat-label>Concepto</mat-label>
+              <textarea matInput formControlName="concept" type="text" placeholder="Ingrese el concepto"
+                required></textarea>
+              @if (destinationFormGroup.controls['concept'].hasError('required')) {
+              <mat-error>
+                El concepto es obligatorio.
+              </mat-error>
+              }
+            </mat-form-field>
+
             <div>
               <button mat-button matStepperPrevious>Atrás</button>
-              <button mat-flat-button color="primary" (click)="executeTransfer(sourceFormGroup.value.sourceAccount, destinationFormGroup.value)" [disabled]="!canExecuteTransfer()">
-                Ejecutar Transferencia
-              </button>
+              <button mat-raised-button matStepperNext [disabled]="destinationFormGroup.invalid">Siguiente</button>
             </div>
-          </mat-step>
-        </mat-vertical-stepper>
-      </mat-card-content>
-    </mat-card>
-  </div>
+          </form>
+        </mat-step>
+        <!-- Paso 3: Confirmar y ejecutar la transferencia -->
+        <mat-step>
+          <ng-template matStepLabel>Confirmar transferencia</ng-template>
+          @if (sourceFormGroup.valid && destinationFormGroup.valid) {
+          <div>
+            <h3>Resumen de la transferencia:</h3>
+            <p><strong>Cuenta de origen:</strong> {{ sourceFormGroup.value.sourceAccount?.accountNumber }}</p>
+            <p><strong>Cuenta de destino:</strong> {{ destinationFormGroup.value.destinationAccount }}</p>
+            <p><strong>Monto a transferir:</strong> ${{ destinationFormGroup.value.amount }}</p>
+            <p><strong>Concepto:</strong> {{ destinationFormGroup.value.concept }}</p>
+          </div>
+          }
+          <div>
+            <button mat-button matStepperPrevious>Atrás</button>
+            <button mat-flat-button color="primary"
+              (click)="executeTransfer(sourceFormGroup.value.sourceAccount, destinationFormGroup.value)"
+              [disabled]="!canExecuteTransfer()">
+              Ejecutar Transferencia
+            </button>
+          </div>
+        </mat-step>
+      </mat-vertical-stepper>
+    </mat-card-content>
+  </mat-card>
+</div>
