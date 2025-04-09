@@ -22,7 +22,6 @@ router.post('/register', async (req: Request, res: Response): Promise<any> => {
 router.post('/login', async (req: Request, res: Response): Promise<any> => {
     const { email, password } = req.body
     const user = await userRepo.findOneBy({ 'email': email })
-    console.log(`user: ${JSON.stringify(user)}`)
 
     if (!user) return res.status(404).json({ message: 'Usuario no encontrado' })
     const valid = await bcrypt.compare(password, user.password)

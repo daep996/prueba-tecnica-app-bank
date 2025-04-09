@@ -81,7 +81,6 @@ router.get('/user/:id', async (req: Request, res: Response): Promise<any> => {
         select: {id: true, amount: true, concept: true, 'type': true, 'created_at': true},
         where: { user: { id: req.params.id } },
     })
-    console.log(`tx: ${JSON.stringify(tx)}`)
     if (!tx) return res.status(404).json({ message: 'Transacción no encontrada' })
     return res.json(tx)
 });
