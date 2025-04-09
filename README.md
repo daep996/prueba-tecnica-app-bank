@@ -10,9 +10,16 @@ Author: Diego Estrada (daep996)
 
 ### IMAGEN DE DOCKER DE POSTGRES
 
+- Subir el contenedor:
 ```bash
 cd BACK
-docker-compose up
+docker-compose up -d
+```
+
+- Bajar el contenedor:
+```bash
+cd BACK
+docker-compose down
 ```
 
 ### MODELO DE BD POSTGRES
@@ -55,5 +62,23 @@ cd BACK
 npm i
 ```
 
+### CREACIÓN DE UN SEED
+
+Se puede generar un seed para que cree las tablas y data de prueba, se rcomienda la primera vez
+```bash
+npm run seed
+```
+### EJECUCIÓN
+
+```bash
+npm run dev
+```
+
 ## FRONTEND
 
+### INSTALACIÓN DE PAQUETES FRONT Y EJECUCIÓN
+```bash
+cd FRONT/ANGULAR
+npm i
+ng serve
+```
