@@ -1,15 +1,16 @@
-import { Component, OnInit } from '@angular/core';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { Observable, of } from 'rxjs';
-import { Account } from '../models/account.model';
-import { AccountService } from '../services/account.service';
-import { AddAccountDialogComponent } from '../add-account-dialog/add-account-dialog.component';
-import { CommonModule } from '@angular/common';
-import { MatTableModule } from '@angular/material/table';
-import { MatButtonModule } from '@angular/material/button';
 import { MatCard, MatCardActions, MatCardContent, MatCardHeader, MatCardTitle } from '@angular/material/card';
-import { MatIcon } from '@angular/material/icon';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { MatTableModule } from '@angular/material/table';
 import { Router, RouterLink } from '@angular/router';
+import { Account } from '../models/account.model';
+import { MatIcon } from '@angular/material/icon';
+import { CommonModule } from '@angular/common';
+import { Subject, takeUntil } from 'rxjs';
+
+import { AddAccountDialogComponent } from '../add-account-dialog/add-account-dialog.component';
+import { AccountService } from '../services/account.service';
 import { UserService } from '../../services/user.service';
 
 @Component({
@@ -31,8 +32,8 @@ import { UserService } from '../../services/user.service';
     MatCardActions
   ]
 })
-export class AccountListComponent implements OnInit {
-  accounts$: Observable<Account[]>;
+export class AccountListComponent implements OnInit, OnDestroy {
+  protected accounts$: Subject<Account[]>
   displayedColumns: string[] = ['name', 'accountNumber', 'accountType', 'balance', 'actions'];
 
   constructor(
@@ -41,13 +42,28 @@ export class AccountListComponent implements OnInit {
     private userService: UserService,
     private router: Router
   ) {
-    this.accounts$ = this.accountService.getAccounts();
+    this.accounts$ = new Subject<Account[]>();
   }
 
   ngOnInit(): void {
     if (!this.userService.isLoggedIn()) {
       this.router.navigate(['/login'])
     }
+    this.accountService.getAccounts()
+      .pipe(takeUntil(this.accounts$))
+      .subscribe({
+        next: (accounts) => {
+          this.accounts$.next(accounts);
+        },
+        error: (error) => {
+          this.router.navigate(['/login'])
+        }
+      })
+  }
+
+  ngOnDestroy(): void {
+      this.accounts$.next([])
+      this.accounts$.complete()
   }
 
   openAddAccountDialog(): void {
@@ -56,7 +72,7 @@ export class AccountListComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(_ => {
-      this.accountService.getAccounts().subscribe((accounts) => this.accounts$ = of(accounts))
+      this.accountService.getAccounts().subscribe((accounts) => this.accounts$.next(accounts))
     });
   }
 

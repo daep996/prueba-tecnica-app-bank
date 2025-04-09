@@ -2,47 +2,47 @@ import { Injectable } from '@angular/core';
 import { jwtDecode, JwtPayload } from 'jwt-decode';
 
 interface CustomJwtPayload extends JwtPayload {
-  userId: number;
+  userId: string;
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
-  private userId = -1;
+  private userId = ''
 
   constructor() {
-    const token = this.getToken();
+    const token = this.getToken()
     if (token) {
-      const decoded = jwtDecode<CustomJwtPayload>(token);
-      this.userId = Number(decoded.userId);
+      const decoded = jwtDecode<CustomJwtPayload>(token)
+      this.userId = decoded.userId
     }
   }
 
   setToken(token: string) : void {
-    const decoded = jwtDecode<CustomJwtPayload>(token);
-    localStorage.setItem('token', token);
-    this.setUserId(Number(decoded.userId))
+    const decoded = jwtDecode<CustomJwtPayload>(token)
+    localStorage.setItem('token', token)
+    this.setUserId(decoded.userId)
   }
 
   getToken(): string | null {
-    return localStorage.getItem('token');
+    return localStorage.getItem('token')
   }
 
-  private setUserId(userId: number): void {
+  private setUserId(userId: string): void {
     this.userId = userId
   }
 
-  getUserId(): number {
-    return this.userId;
+  getUserId(): string {
+    return this.userId
   }
 
   clearUserData(): void {
-    localStorage.removeItem('token');
-    this.userId = -1
+    localStorage.removeItem('token')
+    this.userId = ''
   }
 
   isLoggedIn(): boolean {
-    return !!this.getToken() && this.userId !== -1;
+    return !!this.getToken() && this.userId !== ''
   }
 }

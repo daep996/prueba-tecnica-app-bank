@@ -18,7 +18,7 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
       Transacción: <strong>{{data.message}}</strong>
     </mat-dialog-content>
     <mat-dialog-actions>
-      <button mat-button mat-dialog-close>Cerrar</button>
+      <button mat-raised-button mat-dialog-close>Cerrar</button>
     </mat-dialog-actions>
   `,
   standalone: true,
